@@ -40,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
     TabItem tabPantaloni;
     TabItem tabScarpe;
     FloatingActionButton bottoneAggiungi;
+
+    //roba per immagini
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private StorageReference mStorageRef;
     private ProgressDialog mProgress;
@@ -58,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         //serve per controllare se ho già fatto l'accesso
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
+        //prendo l'istanza dello storage
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
 
@@ -76,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
         tabPantaloni=(TabItem) findViewById(R.id.tab2);
         tabScarpe=(TabItem) findViewById(R.id.tab3);
         bottoneAggiungi=(FloatingActionButton) findViewById(R.id.button);
+
         
         mProgress = new ProgressDialog(this);
         //accesso alla fotocamera
@@ -129,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    //dovrebbe mandare l'immagine al database
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
