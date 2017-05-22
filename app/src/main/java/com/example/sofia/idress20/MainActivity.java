@@ -1,5 +1,8 @@
 package com.example.sofia.idress20;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabItem;
@@ -9,29 +12,75 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
 
+    private final static String TAG = "MainActivity";
 
+
+    private ImageView mImageView;
+    private Bitmap mImageBitmap;
     TabItem tabMaglie;
     TabItem tabPantaloni;
     TabItem tabScarpe;
     FloatingActionButton bottoneAggiungi;
+    static final int REQUEST_IMAGE_CAPTURE = 1;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        /*
+        per fare il signout:
+        FirebaseAuth.getInstance().signOut();
+        */
 
+        //serve per controllare se ho già fatto l'accesso
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+
+
+        if (user==null)
+        {
+            //Devo fare il login
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        } else {
+            //sono già loggato
+            Log.d(TAG, "Loggato come: user=" + user.getEmail());
+        }
 
         tabMaglie = (TabItem) findViewById(R.id.tab1);
         tabPantaloni=(TabItem) findViewById(R.id.tab2);
         tabScarpe=(TabItem) findViewById(R.id.tab3);
         bottoneAggiungi=(FloatingActionButton) findViewById(R.id.button);
+        
+        
+        //accesso alla fotocamera
+        //// TODO: salvare foto sul database 
+        bottoneAggiungi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent camera_intent= new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (camera_intent.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(camera_intent, REQUEST_IMAGE_CAPTURE);
+                }
+            }
+        });
+
+
+
+
 
         setupPager();
     }
@@ -69,6 +118,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+
+
 
 
 

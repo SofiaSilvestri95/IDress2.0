@@ -16,8 +16,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".DettaglioCapo" />
+        <activity android:name=".LoginActivity"></activity>
+        <uses-permission android:name="android.permission.CAMERA" />
+
+        <uses-feature android:name="android.hardware.camera" />
+
     </application>
 
 </manifest>
