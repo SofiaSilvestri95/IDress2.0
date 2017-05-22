@@ -1,7 +1,9 @@
 package com.example.sofia.idress20;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -18,9 +20,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,6 +41,9 @@ public class MainActivity extends AppCompatActivity {
     TabItem tabScarpe;
     FloatingActionButton bottoneAggiungi;
     static final int REQUEST_IMAGE_CAPTURE = 1;
+    private StorageReference mStorageRef;
+    private ProgressDialog mProgress;
+
 
 
     @Override
@@ -47,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
 
         //serve per controllare se ho già fatto l'accesso
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        mStorageRef = FirebaseStorage.getInstance().getReference();
 
 
 
@@ -65,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         tabScarpe=(TabItem) findViewById(R.id.tab3);
         bottoneAggiungi=(FloatingActionButton) findViewById(R.id.button);
         
-        
+        mProgress = new ProgressDialog(this);
         //accesso alla fotocamera
         //// TODO: salvare foto sul database 
         bottoneAggiungi.setOnClickListener(new View.OnClickListener() {
@@ -77,9 +89,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
-
-
 
 
         setupPager();
@@ -120,12 +129,28 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
 
+            mProgress.setMessage("Uploading");
+            mProgress.show();
+        Uri uri = data.getData();
+            StorageReference filepath = mStorageRef.child("photos").child(uri.getLastPathSegment());
+            filepath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
+                    mProgress.dismiss();
+                    Toast.makeText(MainActivity.this, "Upload done...",Toast.LENGTH_LONG).show();
 
-
+                }
+            });
+        }
     }
+}
 
 
 
