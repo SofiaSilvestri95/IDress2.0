@@ -10,6 +10,16 @@ public class CapoAbbigliamento implements Serializable {
 
     private String nomeCapo;
 
+    public String getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
+    }
+
+    private String categoria;
+
     public String getNomeCapo() {
         return nomeCapo;
     }
@@ -20,7 +30,7 @@ public class CapoAbbigliamento implements Serializable {
 
     public CapoAbbigliamento() {}
 
-    public CapoAbbigliamento( String nomeCapo){
+    public CapoAbbigliamento(String nomeCapo){
         this.nomeCapo=nomeCapo;
     }
 

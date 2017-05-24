@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -33,6 +34,9 @@ public class MainActivity extends AppCompatActivity {
 
     private final static String TAG = "MainActivity";
 
+    // Costanti
+    private final static String EXTRA_CAPO = "capo";
+
 
     private ImageView mImageView;
     private Bitmap mImageBitmap;
@@ -41,10 +45,8 @@ public class MainActivity extends AppCompatActivity {
     TabItem tabScarpe;
     FloatingActionButton bottoneAggiungi;
 
-    //roba per immagini
-    static final int REQUEST_IMAGE_CAPTURE = 1;
+
     private StorageReference mStorageRef;
-    private ProgressDialog mProgress;
 
 
 
@@ -52,10 +54,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        /*
-        per fare il signout:
+
+        /*per fare il signout:
         FirebaseAuth.getInstance().signOut();
         */
+
 
         //serve per controllare se ho già fatto l'accesso
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -80,20 +83,16 @@ public class MainActivity extends AppCompatActivity {
         tabScarpe=(TabItem) findViewById(R.id.tab3);
         bottoneAggiungi=(FloatingActionButton) findViewById(R.id.button);
 
-        
-        mProgress = new ProgressDialog(this);
-        //accesso alla fotocamera
-        //// TODO: salvare foto sul database 
-        bottoneAggiungi.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent camera_intent= new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (camera_intent.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(camera_intent, REQUEST_IMAGE_CAPTURE);
-                }
-            }
-        });
 
+        //se clicco sul bottone vado al dettaglio
+    bottoneAggiungi.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
+        //è come se fosse la busta con l'indirizzo
+        Intent intent = new Intent(v.getContext(), DettaglioCapo.class);
+        startActivity(intent);
+    }
+});
 
         setupPager();
     }
@@ -133,28 +132,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    //dovrebbe mandare l'immagine al database
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-
-            mProgress.setMessage("Uploading");
-            mProgress.show();
-        Uri uri = data.getData();
-            StorageReference filepath = mStorageRef.child("photos").child(uri.getLastPathSegment());
-            filepath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
-                    mProgress.dismiss();
-                    Toast.makeText(MainActivity.this, "Upload done...",Toast.LENGTH_LONG).show();
-
-                }
-            });
-        }
-    }
 }
 
 

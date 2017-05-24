@@ -1,5 +1,13 @@
 package com.example.sofia.idress20;
 
+import android.graphics.Paint;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,22 +16,71 @@ import java.util.List;
  */
 
 public class DataStore {
+
+    private final static String DB_MAGLIA = "Maglia";
+    private final static String DB_PANTALONE = "Pantalone";
+    private final static String DB_SCARPE = "Scarpe";
+    private final static String KEY_NOME = "nome";
+    private final static String KEY_CATEGORIA = "Categoria";
+
+
     private ArrayList<CapoAbbigliamento> capiAbbigliamento;
 
     /**
      * Costruttore
      */
     public DataStore() {
+
         capiAbbigliamento = new ArrayList<>();
 
-        // Dati fittizi per effettuare le prove
+        /*Dati fittizi per effettuare le prove
         // Todo: da eliminare
         CapoAbbigliamento a = new CapoAbbigliamento("Maglia bianca");
         CapoAbbigliamento b = new CapoAbbigliamento("Maglia rossa");
         CapoAbbigliamento c = new CapoAbbigliamento("Camica verde");
         capiAbbigliamento.add(a);
         capiAbbigliamento.add(b);
-        capiAbbigliamento.add(c);
+        capiAbbigliamento.add(c); */
+    }
+
+    private ValueEventListener listenerDress;
+
+
+    public interface UpdateListener {
+        void capiAggiornati();
+    }
+
+    public void iniziaOsservazioneCapi(final UpdateListener notifica) {
+
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference(KEY_CATEGORIA);
+
+        listenerDress = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                capiAbbigliamento.clear();
+                for (DataSnapshot elemento:dataSnapshot.getChildren()) {
+                    CapoAbbigliamento capo = new CapoAbbigliamento();
+                    capo.setNomeCapo(elemento.getKey());
+                    capo.setCategoria(elemento.child(KEY_CATEGORIA).getValue(String.class));
+                    capiAbbigliamento.add(capo);
+                }
+                notifica.capiAggiornati();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+
+        ref.addValueEventListener(listenerDress);
+    }
+
+    public void terminaOsservazioneCapo() {
+        if (listenerDress != null)
+            FirebaseDatabase.getInstance().getReference(KEY_CATEGORIA).removeEventListener(listenerDress);
     }
 
     /**
@@ -31,8 +88,10 @@ public class DataStore {
      * @param capo capo da aggiungere
      */
     public void aggiungiCapo(CapoAbbigliamento capo) {
-        capiAbbigliamento.add(capo);
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference(KEY_CATEGORIA).child(capo.getNomeCapo());
+        ref.setValue(capo);
     }
+
 
 
     /**

@@ -23,11 +23,7 @@ import com.example.sofia.idress20.R;
 
 public class FragmentMaglie extends Fragment {
 
-    public FragmentMaglie() {
-    }
-
-    // Costanti
-    private final static String EXTRA_CAPO = "capo";
+    public FragmentMaglie() {}
 
     // Widget
     private ListView listaCapi;
@@ -48,6 +44,16 @@ public class FragmentMaglie extends Fragment {
         adapter = new CapiAbbigliamentoAdapter(getActivity());
         adapter.update(archivio.elencoCapi());
         listaCapi.setAdapter(adapter);
+
+        archivio.iniziaOsservazioneCapi(new DataStore.UpdateListener() {
+            @Override
+            public void capiAggiornati() {
+                adapter.update(archivio.elencoCapi());
+            }
+        });
+
+
+        /*
         listaCapi.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -59,10 +65,15 @@ public class FragmentMaglie extends Fragment {
                 intent.putExtra(EXTRA_CAPO, capo);
                 startActivity(intent);
             }
-        });
-
+        });*/
 
     return view;}
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        archivio.terminaOsservazioneCapo();
+    }
 }
 
 
