@@ -3,4 +3,10 @@
     <string name="paswword">Password:</string>
     <string name="email">Email:</string>
     <string name="obbligatorio"> Il campo è obbligatorio</string>
+
+    <string-array name="categorie">
+        <item>Maglia</item>
+        <item>Pantalone</item>
+        <item>Scarpe</item>
+    </string-array>
 </resources>

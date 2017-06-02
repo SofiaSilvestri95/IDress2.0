@@ -1,6 +1,7 @@
 package com.example.sofia.idress20;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -16,8 +17,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -31,6 +36,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 public class MainActivity extends AppCompatActivity {
+
+
 
     private final static String TAG = "MainActivity";
 
@@ -46,8 +53,32 @@ public class MainActivity extends AppCompatActivity {
     FloatingActionButton bottoneAggiungi;
 
 
-    private StorageReference mStorageRef;
+    //crea il menu in alto a destra, nel nostro caso c'è solo un campo
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        MenuInflater inflater=getMenuInflater();
+        inflater.inflate(R.menu.logout,menu);
+        return true;
+    }
 
+    //gestisce il click sugli elementi del menu
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        int id=item.getItemId();
+        switch(id) {
+            case R.id.MENU_1:
+                //per fare il signout:
+                FirebaseAuth.getInstance().signOut();
+
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+
+                break;
+        }
+        return false;
+    }
 
 
     @Override
@@ -55,17 +86,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        /*per fare il signout:
-        FirebaseAuth.getInstance().signOut();
-        */
-
 
         //serve per controllare se ho già fatto l'accesso
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-        //prendo l'istanza dello storage
-        mStorageRef = FirebaseStorage.getInstance().getReference();
-
 
 
         if (user==null)

@@ -1,5 +1,7 @@
 package com.example.sofia.idress20;
 
+import android.widget.ImageView;
+
 import java.io.Serializable;
 
 /**
@@ -10,6 +12,32 @@ public class CapoAbbigliamento implements Serializable {
 
     private String nomeCapo;
 
+    public ImageView getImmagine() {
+        return immagine;
+    }
+
+    public void setImmagine(ImageView immagine) {
+        this.immagine = immagine;
+    }
+
+    private ImageView immagine;
+
+
+    private String url;
+
+    private String marca;
+
+    private String categoria;
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+
     public String getCategoria() {
         return categoria;
     }
@@ -18,13 +46,12 @@ public class CapoAbbigliamento implements Serializable {
         this.categoria = categoria;
     }
 
-    private String categoria;
 
     public String getNomeCapo() {
         return nomeCapo;
     }
 
-    public void setNomeCapo(String nome) {
+    public void setNomeCapo(String nomeCapo) {
         this.nomeCapo = nomeCapo;
     }
 
@@ -33,5 +60,14 @@ public class CapoAbbigliamento implements Serializable {
     public CapoAbbigliamento(String nomeCapo){
         this.nomeCapo=nomeCapo;
     }
+
+    public String getMarca() {
+        return marca;
+    }
+
+    public void setMarca(String marca) {
+        this.marca = marca;
+    }
+
 
 }

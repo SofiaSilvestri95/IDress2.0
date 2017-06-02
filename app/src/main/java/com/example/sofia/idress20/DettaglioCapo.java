@@ -3,21 +3,33 @@ package com.example.sofia.idress20;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.SyncStateContract;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
+import android.util.Base64;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.io.ByteArrayOutputStream;
 
 /**
  * Created by sofia on 09/05/17.
@@ -29,16 +41,19 @@ public class DettaglioCapo extends AppCompatActivity {
     private final static String EXTRA_CAPO = "capo";
 
     EditText mEditNome;
+    EditText mEditMarca;
     FloatingActionButton mBottoneFoto;
-    EditText mCategoria;
     Button mOK;
+    Spinner mSpinner;
+    ImageView mFoto;
     private ProgressDialog mProgress;
+    private StorageReference mStorageRef;
+
 
     //roba per immagini
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
 
-    //ImageView fotoCapo;
 
 
     @Override
@@ -48,16 +63,20 @@ public class DettaglioCapo extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dettaglio);
 
+        mSpinner = (Spinner)findViewById(R.id.spinner);
         mBottoneFoto = (FloatingActionButton) findViewById(R.id.buttonPhoto);
         mEditNome = (EditText) findViewById(R.id.editTextNomeCapo);
-        mCategoria = (EditText)findViewById(R.id.editTextCategoria);
         mOK = (Button) findViewById(R.id.OKbutton);
+        mEditMarca = (EditText) findViewById(R.id.editMarca);
+        mFoto = (ImageView)findViewById(R.id.imageViewfoto);
+        //serve a selezionare una parola dallo spinner
+        mSpinner.setOnItemSelectedListener(new SpinnerActivity());
 
-
+        //prendo l'istanza dello storage
+        mStorageRef = FirebaseStorage.getInstance().getReference();
 
         mProgress = new ProgressDialog(this);
         //accesso alla fotocamera
-        //// TODO: salvare foto sul database
         mBottoneFoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,44 +87,14 @@ public class DettaglioCapo extends AppCompatActivity {
             }
         });
 
-
-
         mOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                FirebaseDatabase database = FirebaseDatabase.getInstance();
-                 String nome=mEditNome.getText().toString();
-                String categoria=mCategoria.getText().toString();
-
-                CapoAbbigliamento dress= new CapoAbbigliamento();
-                dress.setNomeCapo(nome);
-                dress.setCategoria(categoria);
-
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-                DatabaseReference myRef = database.getReference("Categoria");
-                myRef.child(categoria).push().setValue(nome);
-
-
+                Intent intent = new Intent(v.getContext(), MainActivity.class);
+                startActivity(intent);
             }
         });
-
-
-
-
-        //fotoCapo = (ImageView) findViewById(R.id.imageView);
-
-        /*
-        // Ottengo i dati passati ed eventualmente visualizzo il capo
-        Intent intent = getIntent();
-        CapoAbbigliamento capo = (CapoAbbigliamento) intent.getSerializableExtra(EXTRA_CAPO);
-
-        if (capo != null) {
-            mNomeCapo.setText(capo.getNomeCapo());
-        }*/
-
-
 
     }
 
@@ -116,26 +105,69 @@ public class DettaglioCapo extends AppCompatActivity {
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
 
-            mProgress.setMessage("Uploading");
-            mProgress.show();
+
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
+            mFoto.setImageBitmap(imageBitmap);
 
-              /*
-        Uri uri = data.getData();
-            StorageReference filepath = mStorageRef.child("photos").child(uri.getLastPathSegment());
-            filepath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-                    mProgress.dismiss();
-                    Toast.makeText(MainActivity.this, "Upload done...",Toast.LENGTH_LONG).show();
-
-                }
-            });
-            */
-
+            encodeBitmapAndSaveToFirebase(imageBitmap);
         }
+    }
+
+    public void encodeBitmapAndSaveToFirebase(Bitmap bitmap) {
+
+
+        String nome=mEditNome.getText().toString();
+        String marca=mEditMarca.getText().toString();
+        String categoria = String.valueOf(mSpinner.getSelectedItem());
+
+        if (nome.isEmpty() || marca.isEmpty()){
+            Toast.makeText(getApplicationContext(), "Attenzione! Devi inserire nome e marca", Toast.LENGTH_LONG).show();}
+        else{
+        CapoAbbigliamento dress= new CapoAbbigliamento();
+
+        dress.setCategoria(categoria);
+        dress.setNomeCapo(nome);
+        dress.setMarca(marca);
+
+        // Riferimento al nodo principale
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+        // Riferimento al nodo Categoria (Maglia, Pantalone o Scarpe)
+        DatabaseReference myRef = database.getReference(categoria);
+
+        // Riferimento al sottonodo di Categoria con codice univoco
+        DatabaseReference secRef = myRef.push();
+
+        // Metto i valori nel sottonodo appena creato
+        secRef.child("Nome").setValue(dress.getNomeCapo());
+        secRef.child("Marca").setValue(dress.getMarca());
+
+
+
+
+       //creiamo un oggetto dove salviamo temporaneamente i nostri dati mentre ci lavoriamo
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        //Primo argomento: formato, secondo argomento: qualità, terzo argomento: dati
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        //lo converto in una stringa base64
+        String imageEncoded = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
+
+
+
+
+        dress.setUrl(imageEncoded);
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+
+        secRef.child("Url").setValue(dress.getUrl());
+        }
+
+
+
+
     }
 
 

@@ -26,7 +26,8 @@ public class FragmentMaglie extends Fragment {
     public FragmentMaglie() {}
 
     // Widget
-    private ListView listaCapi;
+    private ListView listaMaglie;
+
 
     // Adapter
     private CapiAbbigliamentoAdapter adapter;
@@ -38,41 +39,32 @@ public class FragmentMaglie extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_maglie, container, false);
 
-        listaCapi = (ListView) view.findViewById(R.id.listMaglie);
-        adapter = new CapiAbbigliamentoAdapter(getActivity());
-        adapter.update(archivio.elencoCapi());
-        listaCapi.setAdapter(adapter);
+        listaMaglie = (ListView)view.findViewById(R.id.listMaglie);
+        adapter = new CapiAbbigliamentoAdapter(getContext());
+        /*adapter.update(archivio.elencoCapi());
+        listaCapi.setAdapter(adapter);*/
 
-        archivio.iniziaOsservazioneCapi(new DataStore.UpdateListener() {
+
+
+
+        archivio.iniziaOsservazioneMaglie(new DataStore.UpdateListener() {
             @Override
             public void capiAggiornati() {
-                adapter.update(archivio.elencoCapi());
+                adapter.update(archivio.elencoMaglie());
             }
         });
 
-
-        /*
-        listaCapi.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                CapoAbbigliamento capo = adapter.getItem(position);
-
-                //è come se fosse la busta con l'indirizzo
-                Intent intent = new Intent(view.getContext(), DettaglioCapo.class);
-                //è come se fosse il contenuto della busta
-                intent.putExtra(EXTRA_CAPO, capo);
-                startActivity(intent);
-            }
-        });*/
+        listaMaglie.setAdapter(adapter);
 
     return view;}
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        archivio.terminaOsservazioneCapo();
+        archivio.terminaOsservazioneMaglie();
     }
 }
 

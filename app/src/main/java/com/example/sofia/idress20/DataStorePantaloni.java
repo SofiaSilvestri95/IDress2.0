@@ -1,8 +1,5 @@
 package com.example.sofia.idress20;
 
-import android.graphics.Bitmap;
-import android.graphics.Paint;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -13,37 +10,35 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by sofia on 14/05/17.
+ * Created by sofia on 30/05/17.
  */
 
-public class DataStore {
+public class DataStorePantaloni {
 
-    private ArrayList<CapoAbbigliamento> listaMaglie;
+    private ArrayList<CapoAbbigliamento> listaPantaloni;
 
-    // Costruttore
-    public DataStore() {
-        listaMaglie = new ArrayList<>();
+    public DataStorePantaloni () {
+        listaPantaloni = new ArrayList<>();
     }
 
     private ValueEventListener listenerDress;
-
 
     public interface UpdateListener {
         void capiAggiornati();
     }
 
-    public void iniziaOsservazioneMaglie(final UpdateListener notifica) {
+    public void iniziaOsservazionePantaloni(final UpdateListener notifica) {
 
         // Riferimento al nodo principale
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference("Maglia");
+        DatabaseReference ref = database.getReference("Pantalone");
 
 
         listenerDress = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                listaMaglie.clear();
+                listaPantaloni.clear();
 
                 for (DataSnapshot elemento: dataSnapshot.getChildren()) {
 
@@ -52,7 +47,7 @@ public class DataStore {
                     capo.setNomeCapo(elemento.child("Nome").getValue(String.class));
                     capo.setMarca(elemento.child("Marca").getValue(String.class));
 
-                    listaMaglie.add(capo);
+                    listaPantaloni.add(capo);
                 }
                 notifica.capiAggiornati();
             }
@@ -67,41 +62,42 @@ public class DataStore {
 
     }
 
-    public void terminaOsservazioneMaglie() {
+    public void terminaOsservazionePantaloni() {
         if (listenerDress != null)
-            FirebaseDatabase.getInstance().getReference("Maglia").removeEventListener(listenerDress);
+            FirebaseDatabase.getInstance().getReference("Pantalone").removeEventListener(listenerDress);
     }
 
     /**
      * Aggiunge un capo al database
      * @param capo capo da aggiungere
      */
-    public void aggiungiMaglia(CapoAbbigliamento capo) {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Maglia").child(capo.getNomeCapo());
+    public void aggiungiPantalone(CapoAbbigliamento capo) {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Pantalone").child(capo.getNomeCapo());
         ref.setValue(capo);
     }
+
 
 
     /**
      * Aggiorna i dati del capo utilizzando il nome come riferimento
      * @param capo dati da aggiornare
      */
-    public void aggiornaMaglia(CapoAbbigliamento capo) {
-        int posizione = getMagliaIndex(capo.getNomeCapo());
+    public void aggiornaPantalone(CapoAbbigliamento capo) {
+        int posizione = getPantaloneIndex(capo.getNomeCapo());
         if (posizione == -1)
-            aggiungiMaglia(capo);
+            aggiungiPantalone(capo);
         else
-            listaMaglie.set(posizione, capo);
+            listaPantaloni.set(posizione, capo);
     }
 
     /**
      * Elimina un capo
      * @param nome nome del capo da eliminare
      */
-    public void eliminaMaglia(String nome) {
-        int posizione = getMagliaIndex(nome);
+    public void eliminaPantalone(String nome) {
+        int posizione = getPantaloneIndex(nome);
         if (posizione != -1)
-            listaMaglie.remove(posizione);
+            listaPantaloni.remove(posizione);
     }
 
     /**
@@ -109,12 +105,12 @@ public class DataStore {
      * @param nome nome da cercare
      * @return Capo letto, oppure null nel caso non venga trovato
      */
-    public CapoAbbigliamento leggiMaglia(String nome) {
-        int posizione = getMagliaIndex(nome);
+    public CapoAbbigliamento leggiPantalone(String nome) {
+        int posizione = getPantaloneIndex(nome);
         if (posizione == -1)
             return null;
         else
-            return listaMaglie.get(posizione);
+            return listaPantaloni.get(posizione);
     }
 
     /**
@@ -122,16 +118,16 @@ public class DataStore {
      * Todo: Attenzione il metodo è potenzialmente pericoloso. Potrebbe restituire troppi dati!
      * @return Lista di capi
      */
-    public List<CapoAbbigliamento> elencoMaglie() {
-        return listaMaglie;
+    public List<CapoAbbigliamento> elencoPantaloni() {
+        return listaPantaloni;
     }
 
     /**
      * Restituisce il numero di capi presenti nel database
      * @return numero di capi
      */
-    public int numeroMaglie() {
-        return listaMaglie.size();
+    public int numeroPantaloni() {
+        return listaPantaloni.size();
     }
 
     /**
@@ -139,11 +135,11 @@ public class DataStore {
      * @param nome nome da cercare
      * @return indice del capo. -1 se non trovato
      */
-    private int getMagliaIndex(String nome) {
+    private int getPantaloneIndex(String nome) {
         boolean trovato = false;
         int index = 0;
-        while (!trovato && index < listaMaglie.size()) {
-            if (listaMaglie.get(index).getNomeCapo().equals(nome)) {
+        while (!trovato && index < listaPantaloni.size()) {
+            if (listaPantaloni.get(index).getNomeCapo().equals(nome)) {
                 return index;
             }
             ++index;
@@ -153,3 +149,5 @@ public class DataStore {
 
 
 }
+
+
