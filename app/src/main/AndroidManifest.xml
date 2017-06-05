@@ -23,7 +23,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".DettaglioCapo" />
-        <activity android:name=".LoginActivity"></activity>
+        <activity android:name=".LoginActivity"/>
+        <activity android:name=".Fragments.DettaglioCapoCliccato" />
+
+        <activity android:name=".AggiungiOutfit">    </activity>
+
+
+
 
 
     </application>

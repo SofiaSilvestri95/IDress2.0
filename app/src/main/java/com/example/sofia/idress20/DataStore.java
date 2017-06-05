@@ -27,7 +27,6 @@ public class DataStore {
 
     private ValueEventListener listenerDress;
 
-
     public interface UpdateListener {
         void capiAggiornati();
     }

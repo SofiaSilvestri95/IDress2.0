@@ -7,12 +7,28 @@
     android:background="@android:color/background_light">
 
     <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="cursive"
+        android:text="Nuovo capo di abbigliamento"
+        android:textSize="30sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHorizontal_bias="0.513" />
+
+    <TextView
         android:id="@+id/textNome"
         android:layout_width="93dp"
         android:layout_height="27dp"
         android:layout_marginLeft="33dp"
         android:layout_marginStart="33dp"
         android:layout_marginTop="25dp"
+        android:fontFamily="casual"
         android:text="Nome:"
         android:textAlignment="viewStart"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
@@ -27,7 +43,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="181dp"
+        android:layout_marginTop="212dp"
         android:clickable="true"
         app:fabSize="mini"
         app:layout_constraintHorizontal_bias="0.501"
@@ -51,12 +67,14 @@
         android:id="@+id/textView6"
         android:layout_width="122dp"
         android:layout_height="28dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="25dp"
+        android:fontFamily="casual"
         android:text="Categoria:"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintTop_toBottomOf="@+id/textView7"
-        tools:layout_editor_absoluteX="16dp" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
     <Button
         android:id="@+id/OKbutton"
@@ -68,7 +86,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:background="@color/colorAccent"
-        android:text="OK"
+        android:text="aggiungi"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spinner" />
@@ -78,7 +96,8 @@
         android:layout_width="81dp"
         android:layout_height="27dp"
         android:layout_marginLeft="33dp"
-        android:layout_marginTop="45dp"
+        android:layout_marginTop="25dp"
+        android:fontFamily="casual"
         android:text="Marca:"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -107,13 +126,17 @@
 
     <ImageView
         android:id="@+id/imageViewfoto"
-        android:layout_width="213dp"
-        android:layout_height="144dp"
+        android:layout_width="141dp"
+        android:layout_height="141dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="7dp"
+        android:adjustViewBounds="true"
+        android:rotation="90"
+        android:scaleType="centerCrop"
+        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
 </android.support.constraint.ConstraintLayout>

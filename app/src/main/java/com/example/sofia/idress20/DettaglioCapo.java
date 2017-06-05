@@ -3,6 +3,7 @@ package com.example.sofia.idress20;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -12,6 +13,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
+import android.view.Surface;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -48,6 +50,7 @@ public class DettaglioCapo extends AppCompatActivity {
     ImageView mFoto;
     private ProgressDialog mProgress;
     private StorageReference mStorageRef;
+    Bitmap imageBitmap;
 
 
     //roba per immagini
@@ -91,6 +94,9 @@ public class DettaglioCapo extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                encodeBitmapAndSaveToFirebase(imageBitmap);
+
+
                 Intent intent = new Intent(v.getContext(), MainActivity.class);
                 startActivity(intent);
             }
@@ -107,11 +113,10 @@ public class DettaglioCapo extends AppCompatActivity {
 
 
             Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            imageBitmap = (Bitmap) extras.get("data");
             mFoto.setImageBitmap(imageBitmap);
 
 
-            encodeBitmapAndSaveToFirebase(imageBitmap);
         }
     }
 
@@ -154,9 +159,6 @@ public class DettaglioCapo extends AppCompatActivity {
         //lo converto in una stringa base64
         String imageEncoded = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
 
-
-
-
         dress.setUrl(imageEncoded);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -172,5 +174,7 @@ public class DettaglioCapo extends AppCompatActivity {
 
 
 
-    }
+
+
+}
 

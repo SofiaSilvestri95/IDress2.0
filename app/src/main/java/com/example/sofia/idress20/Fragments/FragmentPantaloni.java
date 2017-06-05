@@ -1,14 +1,17 @@
 package com.example.sofia.idress20.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.sofia.idress20.CapiAbbigliamentoAdapter;
+import com.example.sofia.idress20.CapoAbbigliamento;
 import com.example.sofia.idress20.DataStore;
 import com.example.sofia.idress20.DataStorePantaloni;
 import com.example.sofia.idress20.DataStoreScarpe;
@@ -24,6 +27,8 @@ public class FragmentPantaloni extends Fragment {
 
     // Widget
     private ListView listaPantaloni;
+
+    private final static String EXTRA_CAPO = "capo";
 
 
     // Adapter
@@ -49,8 +54,23 @@ public class FragmentPantaloni extends Fragment {
             }
         });
         listaPantaloni.setAdapter(adapter);
+
+
+        listaPantaloni.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                CapoAbbigliamento capo = adapter.getItem(position);
+                Intent intent = new Intent(view.getContext(), DettaglioCapoCliccato.class);
+                intent.putExtra(EXTRA_CAPO, capo);
+                startActivity(intent);
+            }
+        });
         return view;
+
+
     }
+
+
     @Override
     public void onDestroy() {
         super.onDestroy();

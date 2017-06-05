@@ -1,14 +1,17 @@
 package com.example.sofia.idress20.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.sofia.idress20.CapiAbbigliamentoAdapter;
+import com.example.sofia.idress20.CapoAbbigliamento;
 import com.example.sofia.idress20.DataStore;
 import com.example.sofia.idress20.DataStoreScarpe;
 import com.example.sofia.idress20.R;
@@ -25,6 +28,9 @@ public class FragmentScarpe extends Fragment {
 
     // Adapter
     private CapiAbbigliamentoAdapter adapter;
+
+    private final static String EXTRA_CAPO = "capo";
+
 
     // Data Store
     private DataStoreScarpe archivioScarpe = new DataStoreScarpe();
@@ -46,6 +52,16 @@ public class FragmentScarpe extends Fragment {
         });
 
         listaScarpe.setAdapter(adapter);
+
+        listaScarpe.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                CapoAbbigliamento capo = adapter.getItem(position);
+                Intent intent = new Intent(view.getContext(), DettaglioCapoCliccato.class);
+                intent.putExtra(EXTRA_CAPO, capo);
+                startActivity(intent);
+            }
+        });
 
         return view;}
 

@@ -72,7 +72,7 @@ public class CapiAbbigliamentoAdapter extends BaseAdapter {
 
         //controlla che l'url non sia vuoto, altrimenti crasha
         if (capo.getUrl() != null){
-        Bitmap imageBitmap = decodeFromFirebaseBase64(capo.getUrl());
+        Bitmap imageBitmap = decodeFromBase64(capo.getUrl());
         foto.setImageBitmap(imageBitmap);}
 
         textNomeCapo.setText(capo.getNomeCapo());
@@ -83,7 +83,7 @@ public class CapiAbbigliamentoAdapter extends BaseAdapter {
     }
 
     //decodifica l'immagine
-   public static Bitmap decodeFromFirebaseBase64(String image)  {
+   public static Bitmap decodeFromBase64(String image)  {
         byte[] decodedByteArray = android.util.Base64.decode(image, Base64.DEFAULT);
        //lo ritrasformo in un bitmap
         return BitmapFactory.decodeByteArray(decodedByteArray, 0, decodedByteArray.length);

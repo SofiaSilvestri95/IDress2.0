@@ -3,10 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/MENU_2"
+        android:icon="@mipmap/hangerplus"
+        android:title="logout"
+        app:showAsAction="always" />
+
+
+    <item
         android:id="@+id/MENU_1"
         android:icon="@android:drawable/ic_menu_set_as"
         android:title="logout"
         app:showAsAction="always" />
 
-    </menu>
+
+
+
+</menu>
 

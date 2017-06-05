@@ -76,7 +76,18 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
 
                 break;
+
+            case R.id.MENU_2:
+
+
+                Intent intent2 = new Intent(this, AggiungiOutfit.class);
+                startActivity(intent2);
+
+                break;
+
         }
+
+
         return false;
     }
 
@@ -153,7 +164,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
 
 
 }

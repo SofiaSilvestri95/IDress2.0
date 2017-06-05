@@ -14,6 +14,7 @@ import com.example.sofia.idress20.CapiAbbigliamentoAdapter;
 import com.example.sofia.idress20.CapoAbbigliamento;
 import com.example.sofia.idress20.DataStore;
 import com.example.sofia.idress20.DettaglioCapo;
+import com.example.sofia.idress20.Outfit;
 import com.example.sofia.idress20.R;
 
 /**
@@ -27,6 +28,8 @@ public class FragmentMaglie extends Fragment {
 
     // Widget
     private ListView listaMaglie;
+
+    private final static String EXTRA_CAPO = "capo";
 
 
     // Adapter
@@ -49,6 +52,15 @@ public class FragmentMaglie extends Fragment {
 
 
 
+        listaMaglie.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                CapoAbbigliamento capo = adapter.getItem(position);
+                Intent intent = new Intent(view.getContext(), DettaglioCapoCliccato.class);
+                intent.putExtra(EXTRA_CAPO, capo);
+                startActivity(intent);
+            }
+        });
 
         archivio.iniziaOsservazioneMaglie(new DataStore.UpdateListener() {
             @Override
