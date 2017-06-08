@@ -36,7 +36,7 @@ public class LoginActivity extends AppCompatActivity {
         editEmail=(EditText)findViewById(R.id.editEmail);
         editPassword=(EditText)findViewById(R.id.editPassword);
         btnLogin=(Button)findViewById(R.id.btnLogin);
-        barra=(ProgressBar)findViewById(R.id.barraAvanzamento);
+      // barra=(ProgressBar)findViewById(R.id.barraAvanzamento);
 
 
 
@@ -47,6 +47,7 @@ public class LoginActivity extends AppCompatActivity {
                 //prendo email e password
                 String email = editEmail.getText().toString();
                 String password = editPassword.getText().toString();
+                //barra.setVisibility(View.VISIBLE);
 
                 if (email.isEmpty())
                     editEmail.setError(getString(R.string.obbligatorio));
@@ -58,14 +59,13 @@ public class LoginActivity extends AppCompatActivity {
 
                     final FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
-                    barra.setVisibility(View.VISIBLE);
 
                     //qua sotto vengo avvisato quando l'autenticazione è avvenuta
                     mAuth.signInWithEmailAndPassword(email, password)
                             .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
-                                    barra.setVisibility(View.INVISIBLE);
+                                    //barra.setVisibility(View.INVISIBLE);
                                   if (task.isSuccessful()){
                                       if (mAuth.getCurrentUser() != null) {
                                          // mi sono autenticato

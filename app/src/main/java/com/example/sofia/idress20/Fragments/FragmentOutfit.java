@@ -32,8 +32,6 @@ public class FragmentOutfit extends Fragment {
 
     FloatingActionButton bottoneAggiungiOutfit;
 
-
-
     private ListView listViewOutfit;
 
     private OutfitAdapter adapter;

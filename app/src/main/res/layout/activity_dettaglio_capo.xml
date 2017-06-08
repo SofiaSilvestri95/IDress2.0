@@ -14,7 +14,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginTop="40dp"
         android:adjustViewBounds="true"
-        android:rotation="270"
+        android:rotation="0"
         android:scaleType="centerCrop"
         app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintLeft_toLeftOf="parent"

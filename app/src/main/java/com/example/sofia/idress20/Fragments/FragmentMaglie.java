@@ -24,6 +24,7 @@ import com.example.sofia.idress20.R;
 
 public class FragmentMaglie extends Fragment {
 
+    //costruttore
     public FragmentMaglie() {}
 
     // Widget
@@ -47,11 +48,10 @@ public class FragmentMaglie extends Fragment {
 
         listaMaglie = (ListView)view.findViewById(R.id.listMaglie);
         adapter = new CapiAbbigliamentoAdapter(getContext());
-        /*adapter.update(archivio.elencoCapi());
-        listaCapi.setAdapter(adapter);*/
 
 
 
+   //clicco su un capo e mi visualizza i dettagli
         listaMaglie.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -65,6 +65,7 @@ public class FragmentMaglie extends Fragment {
         archivio.iniziaOsservazioneMaglie(new DataStore.UpdateListener() {
             @Override
             public void capiAggiornati() {
+                //prendo i dati dall'archivio e li metto nell'adapter
                 adapter.update(archivio.elencoMaglie());
             }
         });

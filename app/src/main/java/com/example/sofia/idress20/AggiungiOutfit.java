@@ -65,9 +65,6 @@ public class AggiungiOutfit extends AppCompatActivity {
     List<String> arrayScarpe = new ArrayList<String>();
 
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,7 +87,6 @@ public class AggiungiOutfit extends AppCompatActivity {
         DatabaseReference refMaglie = database.getReference("Maglia");
         DatabaseReference refPantaloni = database.getReference("Pantalone");
         DatabaseReference refScarpe = database.getReference("Scarpe");
-
 
 
         listenerMaglie = new ValueEventListener() {

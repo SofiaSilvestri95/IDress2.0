@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
     FloatingActionButton bottoneAggiungi;
 
 
-    //crea il menu in alto a destra, nel nostro caso c'è solo un campo
+    //crea il menu in alto a destra
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
         bottoneAggiungi=(FloatingActionButton) findViewById(R.id.button);
 
 
-        //se clicco sul bottone vado al dettaglio
+        //se clicco sul bottone + vado al dettaglio
     bottoneAggiungi.setOnClickListener(new View.OnClickListener() {
     @Override
     public void onClick(View v) {
@@ -142,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
         // Pager
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
 
+        //determina quante pagine esistono e quale fragment va visualizzato
         final PagerAdapter adapter = new TabPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
 
         viewPager.setAdapter(adapter);
@@ -152,6 +153,7 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+                //restituisce la pagina selezionata
                 viewPager.setCurrentItem(tab.getPosition());
             }
 

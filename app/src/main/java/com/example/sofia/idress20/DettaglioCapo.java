@@ -48,15 +48,11 @@ public class DettaglioCapo extends AppCompatActivity {
     Button mOK;
     Spinner mSpinner;
     ImageView mFoto;
-    private ProgressDialog mProgress;
-    private StorageReference mStorageRef;
     Bitmap imageBitmap;
 
 
-    //roba per immagini
+    //codice per l'immagine
     static final int REQUEST_IMAGE_CAPTURE = 1;
-
-
 
 
     @Override
@@ -72,13 +68,11 @@ public class DettaglioCapo extends AppCompatActivity {
         mOK = (Button) findViewById(R.id.OKbutton);
         mEditMarca = (EditText) findViewById(R.id.editMarca);
         mFoto = (ImageView)findViewById(R.id.imageViewfoto);
+
         //serve a selezionare una parola dallo spinner
         mSpinner.setOnItemSelectedListener(new SpinnerActivity());
 
-        //prendo l'istanza dello storage
-        mStorageRef = FirebaseStorage.getInstance().getReference();
 
-        mProgress = new ProgressDialog(this);
         //accesso alla fotocamera
         mBottoneFoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,33 +87,36 @@ public class DettaglioCapo extends AppCompatActivity {
         mOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                //metodo per convertire la foto e passarla su firebase
                 encodeBitmapAndSaveToFirebase(imageBitmap);
 
-
+                //ritorno al main
                 Intent intent = new Intent(v.getContext(), MainActivity.class);
                 startActivity(intent);
             }
         });
 
     }
-
-    //dovrebbe mandare l'immagine al database
+        //prende la foto
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
 
-
+            //i bundle vengono usati per passare i dati tra le varie acitivty
             Bundle extras = data.getExtras();
-            imageBitmap = (Bitmap) extras.get("data");
+
+            imageBitmap = (Bitmap)extras.get("data");
+
+            //visualizza la foto nell'imageview
             mFoto.setImageBitmap(imageBitmap);
 
 
         }
     }
 
+    //metodo che converte la foto in stringa e la mette nel database
     public void encodeBitmapAndSaveToFirebase(Bitmap bitmap) {
 
 
@@ -130,11 +127,24 @@ public class DettaglioCapo extends AppCompatActivity {
         if (nome.isEmpty() || marca.isEmpty()){
             Toast.makeText(getApplicationContext(), "Attenzione! Devi inserire nome e marca", Toast.LENGTH_LONG).show();}
         else{
+
+
+
+
         CapoAbbigliamento dress= new CapoAbbigliamento();
 
         dress.setCategoria(categoria);
         dress.setNomeCapo(nome);
         dress.setMarca(marca);
+
+            //creiamo un oggetto dove salviamo temporaneamente i nostri dati mentre ci lavoriamo
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            //Primo argomento: formato, secondo argomento: qualità, terzo argomento: dati
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+            //lo converto in una stringa base64
+            String imageEncoded = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
+
+            dress.setUrl(imageEncoded);
 
         // Riferimento al nodo principale
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -148,23 +158,8 @@ public class DettaglioCapo extends AppCompatActivity {
         // Metto i valori nel sottonodo appena creato
         secRef.child("Nome").setValue(dress.getNomeCapo());
         secRef.child("Marca").setValue(dress.getMarca());
-
-
-
-
-       //creiamo un oggetto dove salviamo temporaneamente i nostri dati mentre ci lavoriamo
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        //Primo argomento: formato, secondo argomento: qualità, terzo argomento: dati
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        //lo converto in una stringa base64
-        String imageEncoded = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
-
-        dress.setUrl(imageEncoded);
-
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-
         secRef.child("Url").setValue(dress.getUrl());
+
         }
 
 

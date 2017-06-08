@@ -30,7 +30,7 @@
         android:layout_marginLeft="30dp"
         android:layout_marginTop="10dp"
         android:adjustViewBounds="true"
-        android:rotation="270"
+        android:rotation="0"
         android:scaleType="centerCrop"
         app:srcCompat="@drawable/common_google_signin_btn_icon_light_normal" />
 
@@ -42,7 +42,7 @@
         android:layout_marginLeft="30dp"
         android:layout_marginTop="10dp"
         android:adjustViewBounds="true"
-        android:rotation="270"
+        android:rotation="0"
         android:scaleType="centerCrop"
         app:srcCompat="@mipmap/shirt" />
 
@@ -54,7 +54,7 @@
         android:layout_marginLeft="30dp"
         android:layout_marginTop="10dp"
         android:adjustViewBounds="true"
-        android:rotation="270"
+        android:rotation="0"
         android:scaleType="centerCrop"
         app:srcCompat="@drawable/common_google_signin_btn_icon_light_normal" />
 </LinearLayout>

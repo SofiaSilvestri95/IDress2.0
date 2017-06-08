@@ -12,17 +12,7 @@ public class CapoAbbigliamento implements Serializable {
 
     private String nomeCapo;
 
-    public ImageView getImmagine() {
-        return immagine;
-    }
-
-    public void setImmagine(ImageView immagine) {
-        this.immagine = immagine;
-    }
-
-    private ImageView immagine;
-
-
+    //sarebbe la stringa che rappresenta l'immagine, non l'url
     private String url;
 
     private String marca;

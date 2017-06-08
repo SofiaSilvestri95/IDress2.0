@@ -24,6 +24,7 @@ import java.util.List;
 public class CapiAbbigliamentoAdapter extends BaseAdapter {
 
     private List<CapoAbbigliamento> capiAbbigliamento = Collections.emptyList();
+
     private Context context;
 
     /**
@@ -66,13 +67,13 @@ public class CapiAbbigliamentoAdapter extends BaseAdapter {
         ImageView foto = (ImageView)convertView.findViewById(R.id.imageView2);
 
 
-
         // Imposto i valori da visualizzare
         CapoAbbigliamento capo = capiAbbigliamento.get(position);
 
         //controlla che l'url non sia vuoto, altrimenti crasha
         if (capo.getUrl() != null){
         Bitmap imageBitmap = decodeFromBase64(capo.getUrl());
+
         foto.setImageBitmap(imageBitmap);}
 
         textNomeCapo.setText(capo.getNomeCapo());
